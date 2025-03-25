@@ -2,7 +2,6 @@ package models
 
 import (
 	"time"
-
 	"gorm.io/gorm"
 )
 
@@ -12,5 +11,5 @@ type User struct {
 	Email            string    `json:"email" gorm:"unique"`
 	Password         string    `json:"password"`
 	ResetToken       string    `json:"reset_token"`
-	ResetTokenExpiry time.Time `json:"reset_token_expiry"`
+	ResetTokenExpiry time.Time `gorm:"default:null"`
 }

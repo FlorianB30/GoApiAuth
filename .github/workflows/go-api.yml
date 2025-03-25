@@ -16,7 +16,7 @@ jobs:
       - name: Installer Go
         uses: actions/setup-go@v3
         with:
-          go-version: 1.21
+          go-version: 1.24
 
       - name: Lancer les tests
         run: go test ./...

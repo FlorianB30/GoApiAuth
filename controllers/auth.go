@@ -128,7 +128,7 @@ func ResetPassword(c *gin.Context) {
 	user.ResetTokenExpiry = time.Time{}
 	config.DB.Save(&user)
 
-	c.JSON(http.StatusOK, gin.H{"message": "Password reset successfully"})
+	c.JSON(http.StatusNoContent, nil)
 }
 
 // Forgot Password (Send Reset Token via Email)

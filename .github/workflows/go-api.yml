@@ -16,60 +16,10 @@ jobs:
       - name: Installer Go
         uses: actions/setup-go@v3
         with:
-          go-version: 1.24
+          go-version: 1.24.1
 
       - name: Lancer les tests
         run: go test ./...
 
       - name: Compiler l’API
         run: go build -o api
-
-      - name: Installer OpenVPN
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y openvpn
-
-      - name: Configurer et se connecter au VPN
-        run: |
-          echo "${{ secrets.OVPN_CONFIG }}" > vpn.conf
-          # Lancer OpenVPN en tâche de fond (daemon) et attendre la connexion
-          sudo openvpn --config vpn.conf --daemon
-          echo "Attente de 15 secondes pour établir le tunnel VPN..."
-          sleep 15
-
-      - name: Tester la connexion réseau via VPN
-        run: |
-          echo "Vérification de l'accessibilité du serveur via VPN..."
-          ping -c 4 ${{ secrets.SSH_HOST }}
-
-      - name: Vérifier la résolution DNS
-        run: |
-          echo "Test de résolution DNS..."
-          nslookup ${{ secrets.SSH_HOST }}
-
-      - name: Attendre avant de continuer (si besoin)
-        run: sleep 10
-
-      - name: Ajouter la clé SSH
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
-
-      - name: Envoyer sur le serveur
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          source: "api"
-          target: "/home/${{ secrets.SSH_USER }}/"
-
-      - name: Redémarrer l’API
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          script: "sudo systemctl restart go-api"

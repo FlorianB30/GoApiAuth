@@ -234,6 +234,7 @@ func Logout(c *gin.Context) {
 		return
 	}
 	user.ResetTokenExpiry = 0
+	config.DB.Save(&user)
 	
 	c.JSON(204, gin.H{
 		"message": "Logged out successfully. Please delete the token on client side.",

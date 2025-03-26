@@ -227,7 +227,7 @@ func sendResetEmail(email, token string) error {
 }
 
 // Logout
-unc Logout(c *gin.Context) {
+func Logout(c *gin.Context) {
     tokenString := c.GetHeader("Authorization")
 
     if tokenString == "" {

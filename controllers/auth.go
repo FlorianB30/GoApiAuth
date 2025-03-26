@@ -165,18 +165,24 @@ func ForgotPassword(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "Password reset email sent"})
+	// c.JSON(http.StatusOK, gin.H{"message": "Password reset email sent"})
+	c.JSON(http.StatusOK, gin.H{"message": "Password reset email sent", "token": resetToken})
 }
 
 // Generate a random reset token
+// func generateResetToken() string {
+// 	const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+// 	rand.Seed(time.Now().UnixNano())
+// 	b := make([]byte, 32)
+// 	for i := range b {
+// 		b[i] = charset[rand.Intn(len(charset))]
+// 	}
+// 	return string(b)
+// }
 func generateResetToken() string {
-	const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-	rand.Seed(time.Now().UnixNano())
-	b := make([]byte, 32)
-	for i := range b {
-		b[i] = charset[rand.Intn(len(charset))]
-	}
-	return string(b)
+    bytes := make([]byte, 8) // 8 bytes * 2 = 16 caractères hexadécimaux
+    rand.Read(bytes)
+    return hex.EncodeToString(bytes)
 }
 
 func sendResetEmail(email, token string) error {

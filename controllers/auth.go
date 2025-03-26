@@ -227,28 +227,32 @@ func sendResetEmail(email, token string) error {
 }
 
 // Logout
-func Logout(c *gin.Context) {
-	tokenString := c.GetHeader("Authorization")
+unc Logout(c *gin.Context) {
+    tokenString := c.GetHeader("Authorization")
 
-	if tokenString == "" {
+    if tokenString == "" {
         c.JSON(http.StatusUnauthorized, gin.H{"error": "No token provided"})
         return
     }
 
-	var user models.User
-	if err := config.DB.Where("reset_token = ?", tokenString).First(&user).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
-		return
-	}
+    // Rechercher l'utilisateur en fonction du ResetToken
+    var user models.User
+    if err := config.DB.Where("ResetToken = ?", tokenString).First(&user).Error; err != nil {
+        c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
+        return
+    }
 
-	user.ResetTokenExpiry = time.Now()
+    // Invalider le ResetToken en le supprimant
+    user.ResetToken = ""
+    user.ResetTokenExpiry = time.Now() // Définir l'expiration à maintenant
 
-    fmt.Println("test :", user.ResetToken)
+    // Sauvegarder les modifications dans la base de données
+    if err := config.DB.Save(&user).Error; err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "Error saving user"})
+        return
+    }
 
-	// Save token in the database
-	config.DB.Save(&user)
-
-	c.JSON(204, gin.H{
-		"message": "Logged out successfully. Please delete the token on client side.",
-	})
+    c.JSON(http.StatusNoContent, gin.H{
+        "message": "Logged out successfully. Please delete the token on client side.",
+    })
 }

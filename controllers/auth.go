@@ -228,6 +228,23 @@ func sendResetEmail(email, token string) error {
 
 // Logout
 func Logout(c *gin.Context) {
+	tokenString := c.GetHeader("Authorization")
+
+	if tokenString == "" {
+        c.JSON(http.StatusUnauthorized, gin.H{"error": "No token provided"})
+        return
+    }
+
+	var user models.User
+	if err := config.DB.Where("token = ?", tokenString).First(&user).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
+		return
+	}
+
+	user.ResetTokenExpiry = time.Now()
+
+	// Save token in the database
+	config.DB.Save(&user)
 	c.JSON(204, gin.H{
 		"message": "Logged out successfully. Please delete the token on client side.",
 	})

@@ -207,7 +207,7 @@ func sendResetEmail(email, token string) error {
 
 // Logout
 func Logout(c *gin.Context) {
-	c.JSON(200, gin.H{
+	c.JSON(204, gin.H{
 		"message": "Logged out successfully. Please delete the token on client side.",
 	})
 }

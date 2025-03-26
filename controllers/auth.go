@@ -30,8 +30,20 @@ func Register(c *gin.Context) {
 	}
 
 	// Check if password is empty
-	if user.Password == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Password cannot be empty"})
+	// if user.Password == "" {
+	// 	c.JSON(http.StatusBadRequest, gin.H{"error": "Password cannot be empty"})
+	// 	return
+	// }
+	//check if name , email and password are empty
+	if user.Name == "" || user.Email == "" || user.Password == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Name, email, and password are required"})
+		return
+	}
+
+	// Vérifier si l'email est déjà utilisé
+	var existingUser models.User
+	if err := config.DB.Where("email = ?", user.Email).First(&existingUser).Error; err == nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Email is already in use"})
 		return
 	}
 

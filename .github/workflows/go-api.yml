@@ -24,6 +24,13 @@ jobs:
       - name: Compiler l’API
         run: go build -o api
 
+      - name: Ajouter la clé SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
       - name: Envoyer sur le serveur
         uses: appleboy/scp-action@master
         with:

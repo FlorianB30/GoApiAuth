@@ -1,4 +1,4 @@
-name: Déploiement API Go via OpenVPN
+name: API Go
 
 on:  
   push:

@@ -87,13 +87,13 @@ func Login(c *gin.Context) {
 
 	var user models.User
 	if err := config.DB.Where("email = ?", input.Email).First(&user).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid credentials"})
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
 		return
 	}
 
 	// Check if password matches
 	if !utils.CheckPassword(user.Password, input.Password) {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid credentials"})
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
 		//c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid credentials"})
 		return
 	}

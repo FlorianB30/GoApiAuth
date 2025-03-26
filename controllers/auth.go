@@ -10,7 +10,7 @@ import (
 	"net/smtp"
 	"os"
 	"time"
-
+    "encoding/hex"
 	"github.com/gin-gonic/gin"
 )
 

@@ -18,7 +18,8 @@ func AuthRoutes(r *gin.Engine) {
 		protected := group.Group("/")
 		protected.Use(middlewares.AuthMiddleware()) // Require authentication
 		protected.GET("/me", controllers.GetUserProfile)
-		protected.GET("/health", controllers.GetHealth)
 		protected.POST("/logout", controllers.Logout)
+		// Health route
+		protected.GET("/health", controllers.GetHealth)
 	}
 }

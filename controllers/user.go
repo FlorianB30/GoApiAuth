@@ -27,7 +27,6 @@ func GetUserProfile(c *gin.Context) {
 
 	// Debugging print
 	fmt.Println("🔹 Returning profile for:", user.Email)
-	fmt.Println("test : ", user.Email, email)
 
 	// Return user profile
 	c.JSON(http.StatusOK, gin.H{

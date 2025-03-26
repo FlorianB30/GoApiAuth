@@ -93,7 +93,7 @@ func Login(c *gin.Context) {
 
 	// Check if password matches
 	if !utils.CheckPassword(user.Password, input.Password) {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid credentials"})
 		//c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid credentials"})
 		return
 	}

@@ -1,4 +1,4 @@
-name: Déploiement API Go
+name: Déploiement API Go via OpenVPN
 
 on:  
   push:
@@ -24,9 +24,22 @@ jobs:
       - name: Compiler l’API
         run: go build -o api
 
-      - name: Tester la connexion réseau
+      - name: Installer OpenVPN
         run: |
-          echo "Vérification de l'accessibilité du serveur..."
+          sudo apt-get update
+          sudo apt-get install -y openvpn
+
+      - name: Configurer et se connecter au VPN
+        run: |
+          echo "${{ secrets.OVPN_CONFIG }}" > vpn.conf
+          # Lancer OpenVPN en tâche de fond (daemon) et attendre la connexion
+          sudo openvpn --config vpn.conf --daemon
+          echo "Attente de 15 secondes pour établir le tunnel VPN..."
+          sleep 15
+
+      - name: Tester la connexion réseau via VPN
+        run: |
+          echo "Vérification de l'accessibilité du serveur via VPN..."
           ping -c 4 ${{ secrets.SSH_HOST }}
 
       - name: Vérifier la résolution DNS

@@ -237,7 +237,7 @@ func Logout(c *gin.Context) {
 
     // Rechercher l'utilisateur en fonction du ResetToken
     var user models.User
-    if err := config.DB.Where("ResetToken = ?", tokenString).First(&user).Error; err != nil {
+    if err := config.DB.Where("reset_token = ?", tokenString).First(&user).Error; err != nil {
         c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
         return
     }

@@ -233,9 +233,9 @@ func Logout(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
 		return
 	}
-	user.ResetTokenExpiry = 0
+	user.ResetTokenExpiry = time.Now()
 	config.DB.Save(&user)
-	
+
 	c.JSON(204, gin.H{
 		"message": "Logged out successfully. Please delete the token on client side.",
 	})

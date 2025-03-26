@@ -24,6 +24,19 @@ jobs:
       - name: Compiler l’API
         run: go build -o api
 
+      - name: Tester la connexion réseau
+        run: |
+          echo "Vérification de l'accessibilité du serveur..."
+          ping -c 4 ${{ secrets.SSH_HOST }}
+
+      - name: Vérifier la résolution DNS
+        run: |
+          echo "Test de résolution DNS..."
+          nslookup ${{ secrets.SSH_HOST }}
+
+      - name: Attendre avant de continuer (si besoin)
+        run: sleep 10
+
       - name: Ajouter la clé SSH
         run: |
           mkdir -p ~/.ssh

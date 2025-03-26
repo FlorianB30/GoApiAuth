@@ -243,7 +243,7 @@ func Logout(c *gin.Context) {
 
 	user.ResetTokenExpiry = time.Now()
 
-    fmt.Println("test :", err, user.ResetToken)
+    fmt.Println("test :", user.ResetToken)
 
 	// Save token in the database
 	config.DB.Save(&user)

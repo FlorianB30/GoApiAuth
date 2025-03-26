@@ -11,7 +11,7 @@ func UserRoutes(r *gin.Engine) {
 	group := r.Group("/633aa0c9-d914-4308-8fde-4b9333516586")
 	{
 		protected := group.Group("/")
-		protected.GET("/health", controllers.GetHealth)
+		group.GET("/health", controllers.GetHealth)
 		protected.Use(middlewares.AuthMiddleware()) // Require authentication
 		protected.GET("/me", controllers.GetUserProfile)
 	}
